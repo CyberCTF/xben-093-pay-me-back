@@ -1,0 +1,31 @@
+# yaml-language-server: $schema=https://www.isoloom.com/schema/v1.json
+# XBEN-093-24 Pay me Back (XBOW's validation benchmarks, by XBOW) as an Isoloom spec:
+# a Flask application to track who owes the user money, with logins, transactions and payment reminders.
+# The benchmark folder benchmarks/XBEN-093-24 of xbow-engineering/validation-benchmarks is vendored
+# unchanged in build/web/app/, built by its own Dockerfiles; the overlay in build/web/ bakes in the fixed flag.
+# `isoloom generate`, then `isoloom run docker`.
+version: 1
+name: xben-093-pay-me-back
+
+networks:
+  lab: { cidr: 10.61.136.0/24, internet: false }
+
+machines:
+  web:
+    networks: { lab: 10 }
+    services: [{ port: 5003, name: web, http: true, publish: 5003 }]
+    resources: { cpus: 1, memory_mb: 512 }
+    docker:
+      build: build/web
+
+checks:
+  - name: the Pay me Back page answers
+    http: http://web:5003/login
+    wait: 180
+  - name: a wrong login is refused
+    script: checks/probe.sh
+    wait: 60
+
+message: |
+  Pay me Back answers at http://localhost:{{ machines.web.services.0.publish }}/.
+  Track the debts owed to you and send reminders. Default credentials are user / user.
