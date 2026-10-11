@@ -1,0 +1,56 @@
+{
+  "objectives": [
+    {
+      "key": "main",
+      "title": "Read the flag",
+      "prompt": "Exploit the server-side template injection weakness of a Flask application to track who owes the user money, with logins, transactions and payment reminders and recover the flag (FLAG{...}) it guards.",
+      "check": {
+        "evidence": "SECRET",
+        "format": "FLAG{%s}"
+      },
+      "dev": "FLAG{dev-xben-093-pay-me-back}",
+      "hints": [
+        "Find the input that ends up inside the template source rather than being passed to it as data."
+      ],
+      "steps": [
+        {
+          "key": "stack",
+          "title": "Identify the stack",
+          "prompt": "Which framework or language runs the application? (name only)",
+          "check": {
+            "answer": [
+              "flask",
+              "python",
+              "werkzeug",
+              "python flask"
+            ]
+          }
+        },
+        {
+          "key": "class",
+          "title": "Name the weakness",
+          "prompt": "Which vulnerability class lets your input be evaluated by the template engine?",
+          "check": {
+            "answer": [
+              "ssti",
+              "server-side template injection",
+              "server side template injection",
+              "template injection"
+            ]
+          }
+        },
+        {
+          "key": "engine",
+          "title": "Name the template engine",
+          "prompt": "Which template engine renders the reminders?",
+          "check": {
+            "answer": [
+              "jinja",
+              "jinja2"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
